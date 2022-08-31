@@ -21,7 +21,10 @@ class _TimerScreenState extends State<TimerScreen>
 
   @override
   void initState() {
-    controller = AnimationController(vsync: this)
+    controller = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: timer.exerciseTimeInSec),
+        value: 100)
       ..addListener(() {
         setState(() {});
       })
@@ -78,8 +81,8 @@ class _TimerScreenState extends State<TimerScreen>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: startTimer,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        tooltip: 'Start',
+        child: const Icon(Icons.play_arrow),
       ),
     );
   }
