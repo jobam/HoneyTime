@@ -13,16 +13,16 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
   TextEditingController txtCycles = TextEditingController();
-  TextEditingController txtExercicesNb = TextEditingController();
-  TextEditingController txtExerciceTimeInSec = TextEditingController();
-  TextEditingController txtPauseBetweenExercices = TextEditingController();
+  TextEditingController txtexercisesNb = TextEditingController();
+  TextEditingController txtexerciseTimeInSec = TextEditingController();
+  TextEditingController txtPauseBetweenexercises = TextEditingController();
   TextEditingController txtPauseBetweenCycles = TextEditingController();
   StoreManager storeManager = StoreManager();
   List<Timer> timers = [];
 
   @override
   void initState() {
-    storeManager.Init();
+    storeManager.init().then((value) => updateScreen());
     super.initState();
   }
 
@@ -35,13 +35,29 @@ class _ListScreenState extends State<ListScreen> {
         title: Text('Timers'),
       ),
       body: ListView(
-        children: [Container()],
+        children: getContent(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => {showSessionDialog(context)},
       ),
     );
+  }
+
+  List<Widget> getContent() {
+    List<Widget> tiles = [];
+    timers.forEach((timer) {
+      tiles.add(Dismissible(
+        key: UniqueKey(),
+        onDismissed: (_) =>
+            storeManager.delete(timer.id).then((_) => updateScreen()),
+        child: ListTile(
+            title: Text(
+                "exercises: ${timer.exercisesNb} x ${timer.exerciseTimeInSec} / ${timer.pauseBetweenExercises}"),
+            subtitle: Text("cycles: ${timer.cycles} / ${timer.pauseBetweenCycles}")),
+      ));
+    });
+    return tiles;
   }
 
   Future<dynamic> showSessionDialog(BuildContext context) async {
@@ -54,21 +70,21 @@ class _ListScreenState extends State<ListScreen> {
                 child: Column(
                   children: [
                     TextField(
-                      controller: txtExerciceTimeInSec,
+                      controller: txtexerciseTimeInSec,
                       decoration:
-                          InputDecoration(hintText: 'Exercice Time in sec'),
+                          InputDecoration(hintText: 'exercise Time in sec'),
                       keyboardType: TextInputType.number,
                     ),
                     TextField(
-                      controller: txtExercicesNb,
+                      controller: txtexercisesNb,
                       decoration:
-                          InputDecoration(hintText: 'Number of Exercices'),
+                          InputDecoration(hintText: 'Number of exercises'),
                       keyboardType: TextInputType.number,
                     ),
                     TextField(
-                      controller: txtPauseBetweenExercices,
+                      controller: txtPauseBetweenexercises,
                       decoration: InputDecoration(
-                          hintText: 'Pause between exercices in sec'),
+                          hintText: 'Pause between exercises in sec'),
                       keyboardType: TextInputType.number,
                     ),
                     TextField(
@@ -92,24 +108,22 @@ class _ListScreenState extends State<ListScreen> {
                       clearControls();
                     },
                     child: Text('Cancel')),
-                ElevatedButton(onPressed: saveSession, child: Text('Save')),
+                ElevatedButton(onPressed: saveTimer, child: Text('Save')),
               ]);
         });
   }
 
-  Future saveSession() async {
+  Future saveTimer() async {
     var uuid = Uuid();
-    DateTime now = DateTime.now();
     Timer newTimer = Timer(
         uuid.v4(),
         int.tryParse(txtCycles.text) ?? 0,
-        int.tryParse(txtExercicesNb.text) ?? 0,
-        int.tryParse(txtExerciceTimeInSec.text) ?? 0,
-        int.tryParse(txtPauseBetweenExercices.text) ?? 0,
+        int.tryParse(txtexercisesNb.text) ?? 0,
+        int.tryParse(txtexerciseTimeInSec.text) ?? 0,
+        int.tryParse(txtPauseBetweenexercises.text) ?? 0,
         int.tryParse(txtPauseBetweenCycles.text) ?? 0);
     await storeManager.write(newTimer).then((value) => updateScreen());
 
-    txtPauseBetweenCycles.clear();
     clearControls();
     Navigator.pop(context);
   }
@@ -120,10 +134,10 @@ class _ListScreenState extends State<ListScreen> {
   }
 
   void clearControls() {
-    txtPauseBetweenExercices.clear();
+    txtPauseBetweenexercises.clear();
     txtPauseBetweenCycles.clear();
     txtCycles.clear();
-    txtExercicesNb.clear();
-    txtExerciceTimeInSec.clear();
+    txtexercisesNb.clear();
+    txtexerciseTimeInSec.clear();
   }
 }

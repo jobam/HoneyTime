@@ -1,28 +1,28 @@
 class Timer {
   static const int CYCLE_DEFAULT = 1;
-  static const int EXERCICES_NB_DEFAULT = 1;
-  static const int EXERCICES_TIME_INSEC_DEFAULT = 25;
-  static const int PAUSE_BETWEEN_EXERCICES_DEFAULT = 10;
+  static const int exercises_NB_DEFAULT = 1;
+  static const int exercises_TIME_INSEC_DEFAULT = 25;
+  static const int PAUSE_BETWEEN_EXERCISES_DEFAULT = 10;
   static const int PAUSE_BETWEEN_CYCLES_DEFAULT = 30;
 
   String id = '';
   int cycles = CYCLE_DEFAULT;
-  int exercicesNb = EXERCICES_NB_DEFAULT;
-  int exerciceTimeInSec = EXERCICES_TIME_INSEC_DEFAULT;
-  int pauseBetweenExercices = PAUSE_BETWEEN_EXERCICES_DEFAULT;
+  int exercisesNb = exercises_NB_DEFAULT;
+  int exerciseTimeInSec = exercises_TIME_INSEC_DEFAULT;
+  int pauseBetweenExercises = PAUSE_BETWEEN_EXERCISES_DEFAULT;
   int pauseBetweenCycles = PAUSE_BETWEEN_CYCLES_DEFAULT;
 
-  Timer(this.id, this.cycles, this.exercicesNb, this.exerciceTimeInSec,
-      this.pauseBetweenExercices, this.pauseBetweenCycles) {}
+  Timer(this.id, this.cycles, this.exercisesNb, this.exerciseTimeInSec,
+      this.pauseBetweenExercises, this.pauseBetweenCycles) {}
 
   Timer.fromJson(Map<String, dynamic> map) {
     id = map['id'] ?? '';
     cycles = map['cycles'] ?? CYCLE_DEFAULT;
-    exercicesNb = map['exercicesNb'] ?? EXERCICES_NB_DEFAULT;
-    exerciceTimeInSec =
-        map['exerciceTimeInSec'] ?? EXERCICES_TIME_INSEC_DEFAULT;
-    pauseBetweenExercices =
-        map['pauseBetweenExercices'] ?? PAUSE_BETWEEN_EXERCICES_DEFAULT;
+    exercisesNb = map['exercisesNb'] ?? exercises_NB_DEFAULT;
+    exerciseTimeInSec =
+        map['exerciseTimeInSec'] ?? exercises_TIME_INSEC_DEFAULT;
+    pauseBetweenExercises =
+        map['pauseBetweenExercises'] ?? PAUSE_BETWEEN_EXERCISES_DEFAULT;
     pauseBetweenCycles =
         map['pauseBetweenCycles'] ?? PAUSE_BETWEEN_CYCLES_DEFAULT;
   }
@@ -31,9 +31,9 @@ class Timer {
     return {
       'id':id,
       'cycles': cycles,
-      'exercicesNb': exercicesNb,
-      'exerciceTimeInSec': exerciceTimeInSec,
-      'pauseBetweenExercices': pauseBetweenExercices,
+      'exercisesNb': exercisesNb,
+      'exerciseTimeInSec': exerciseTimeInSec,
+      'pauseBetweenExercises': pauseBetweenExercises,
       'pauseBetweenCycles': pauseBetweenCycles
     };
   }

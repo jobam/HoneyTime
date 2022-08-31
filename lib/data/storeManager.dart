@@ -7,7 +7,7 @@ import '../models/timer.dart';
 class StoreManager {
   static late SharedPreferences prefs;
 
-  Future Init() async {
+  Future init() async {
     prefs = await SharedPreferences.getInstance();
   }
 
