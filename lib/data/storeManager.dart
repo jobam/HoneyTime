@@ -11,15 +11,15 @@ class StoreManager {
     prefs = await SharedPreferences.getInstance();
   }
 
-  Future writeSession(Timer timer) async {
+  Future write(Timer timer) async {
     prefs.setString(timer.id, json.encode(timer.toJson()));
   }
 
-  Timer getSession(String id) {
+  Timer get(String id) {
     return Timer.fromJson(json.decode(prefs.getString(id) ?? ''));
   }
 
-  List<Timer> getTimers() {
+  List<Timer> getList() {
     List<Timer> timers = [];
     Set<String> keys = prefs.getKeys();
 

@@ -80,7 +80,7 @@ class _TimerScreenState extends State<TimerScreen>
   }
 
   void startTimer() {
-    var timerTest = Timer(1, 1, 25, 10, 30);
+    var timerTest = Timer("aaaa",1, 1, 25, 10, 30);
     controller.value = 100;
     controller.duration = Duration(seconds: timerTest.exerciceTimeInSec);
     controller.reverse();
