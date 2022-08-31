@@ -4,15 +4,20 @@ import '../models/timer.dart';
 import '../shared/menu_bottom.dart';
 
 class TimerScreen extends StatefulWidget {
-  const TimerScreen({Key? key}) : super(key: key);
+  final Timer timer;
+
+  const TimerScreen({Key? key, required this.timer}) : super(key: key);
 
   @override
-  State<TimerScreen> createState() => _TimerScreenState();
+  State<TimerScreen> createState() => _TimerScreenState(timer);
 }
 
 class _TimerScreenState extends State<TimerScreen>
     with TickerProviderStateMixin {
   late AnimationController controller;
+  Timer timer;
+
+  _TimerScreenState(this.timer) {}
 
   @override
   void initState() {
@@ -80,9 +85,8 @@ class _TimerScreenState extends State<TimerScreen>
   }
 
   void startTimer() {
-    var timerTest = Timer("aaaa",1, 1, 25, 10, 30);
     controller.value = 100;
-    controller.duration = Duration(seconds: timerTest.exerciseTimeInSec);
+    controller.duration = Duration(seconds: timer.exerciseTimeInSec);
     controller.reverse();
   }
 }

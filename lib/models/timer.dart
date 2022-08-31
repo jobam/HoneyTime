@@ -5,6 +5,14 @@ class Timer {
   static const int PAUSE_BETWEEN_EXERCISES_DEFAULT = 10;
   static const int PAUSE_BETWEEN_CYCLES_DEFAULT = 30;
 
+  static Timer DEFAULT_TIMER = Timer(
+      'DEFAULT',
+      CYCLE_DEFAULT,
+      exercises_NB_DEFAULT,
+      exercises_TIME_INSEC_DEFAULT,
+      PAUSE_BETWEEN_EXERCISES_DEFAULT,
+      PAUSE_BETWEEN_CYCLES_DEFAULT);
+
   String id = '';
   int cycles = CYCLE_DEFAULT;
   int exercisesNb = exercises_NB_DEFAULT;
@@ -27,9 +35,9 @@ class Timer {
         map['pauseBetweenCycles'] ?? PAUSE_BETWEEN_CYCLES_DEFAULT;
   }
 
-  Map<String, dynamic> toJson(){
+  Map<String, dynamic> toJson() {
     return {
-      'id':id,
+      'id': id,
       'cycles': cycles,
       'exercisesNb': exercisesNb,
       'exerciseTimeInSec': exerciseTimeInSec,

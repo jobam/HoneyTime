@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:honey_time/screens/list_screen.dart';
 import 'package:honey_time/screens/timer_screen.dart';
 
+import 'models/timer.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -18,9 +20,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue
         ),
         routes: {
-          '/': (context) => TimerScreen(),
+          '/': (context) => TimerScreen(timer:Timer.DEFAULT_TIMER),
           '/list': (context) => ListScreen(),
         },
-        initialRoute: '/');
+        initialRoute: '/list');
   }
 }

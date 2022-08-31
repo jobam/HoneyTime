@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:honey_time/data/storeManager.dart';
+import 'package:honey_time/screens/timer_screen.dart';
+import 'package:honey_time/shared/menu_bottom.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/timer.dart';
@@ -32,8 +34,9 @@ class _ListScreenState extends State<ListScreen> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text('Timers'),
+        title: const Text('Timers'),
       ),
+      bottomNavigationBar: const MenuBottom(),
       body: ListView(
         children: getContent(),
       ),
@@ -52,9 +55,15 @@ class _ListScreenState extends State<ListScreen> {
         onDismissed: (_) =>
             storeManager.delete(timer.id).then((_) => updateScreen()),
         child: ListTile(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TimerScreen(timer: timer),
+                )),
             title: Text(
                 "exercises: ${timer.exercisesNb} x ${timer.exerciseTimeInSec} / ${timer.pauseBetweenExercises}"),
-            subtitle: Text("cycles: ${timer.cycles} / ${timer.pauseBetweenCycles}")),
+            subtitle:
+                Text("cycles: ${timer.cycles} / ${timer.pauseBetweenCycles}")),
       ));
     });
     return tiles;
