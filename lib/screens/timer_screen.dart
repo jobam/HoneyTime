@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../models/timer.dart';
 import '../shared/menu_bottom.dart';
@@ -45,7 +49,6 @@ class _TimerScreenState extends State<TimerScreen>
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -55,67 +58,92 @@ class _TimerScreenState extends State<TimerScreen>
       bottomNavigationBar: const MenuBottom(),
       body: Container(
         height: double.infinity,
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Flex(
-                direction: Axis.vertical,
-                children: [
-                  SizedBox(
-                      width: 200,
-                      height: 200,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 15,
-                        value: timerController.value,
-                        semanticsLabel: 'Circular progress indicator',
-                      )),
-                  Container(
-                    transform: Matrix4.translationValues(0.0, -138.0, 0.0),
-                    child: Text(
-                      (timerController.value *
-                              (timerController.duration?.inSeconds ?? 0.0))
-                          .toStringAsFixed(0),
-                      style: TextStyle(fontSize: 60, color: Colors.blue),
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Flex(
+                    direction: Axis.vertical,
+                    children: [
+                      SizedBox(
+                          width: 200,
+                          height: 200,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 15,
+                            value: timerController.value,
+                            semanticsLabel: 'Circular progress indicator',
+                          )),
+                      Container(
+                        transform: Matrix4.translationValues(0.0, -138.0, 0.0),
+                        child: Text(
+                          (timerController.value *
+                                  (timerController.duration?.inSeconds ?? 0.0))
+                              .toStringAsFixed(0),
+                          style: TextStyle(fontSize: 60, color: Colors.blue),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ]
-                // Padding(
-                //   padding: const EdgeInsets.all(20.0),
-                //   child: Center(
-                //     child: Row(
-                //       children: [
-                //         Column(
-                //           children: [
-                //             Text('Cycle: ${currentCycleNb}'),
-                //             Text('Exercice: ${currentExerciseNb}'),
-                //           ],
-                //         ),
-                //         Column(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           children: <Widget>[
-                //
-                //           ],
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                ),
+                ]
+                    // Padding(
+                    //   padding: const EdgeInsets.all(20.0),
+                    //   child: Center(
+                    //     child: Row(
+                    //       children: [
+                    //         Column(
+                    //           children: [
+                    //             Text('Cycle: ${currentCycleNb}'),
+                    //             Text('Exercice: ${currentExerciseNb}'),
+                    //           ],
+                    //         ),
+                    //         Column(
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           children: <Widget>[
+                    //
+                    //           ],
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Exercise : ${currentExerciseNb} / ${timer.exercisesNb}',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      'Cycle : ${currentCycleNb} / ${timer.cycles}',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                )
+              ],
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => startTimer(timer.exerciseTimeInSec),
+        onPressed: () async => await startTimer(timer.exerciseTimeInSec),
         tooltip: 'Start',
         child: const Icon(Icons.play_arrow),
       ),
     );
   }
 
-  void startTimer(int duration) {
+  Future startTimer(int duration) async {
+    AudioPlayer player = AudioPlayer();
+    await player.setSource(AssetSource('audio/count_down.wav'));
+
     timerController.value = 100;
     timerController.duration = Duration(seconds: duration);
     timerController.reverse();
