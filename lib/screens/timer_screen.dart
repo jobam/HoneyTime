@@ -20,6 +20,7 @@ class _TimerScreenState extends State<TimerScreen>
     with TickerProviderStateMixin {
   late AnimationController timerController;
 
+  final int soundDuration = 3;
   int currentExerciseNb = 1;
   int currentCycleNb = 1;
 
@@ -37,7 +38,7 @@ class _TimerScreenState extends State<TimerScreen>
         duration: Duration(seconds: timer.exerciseTimeInSec),
         value: 1)
       ..addListener(()  {
-        var threeSecsValue = 3 / (timerController.duration?.inSeconds ?? 3);
+        var threeSecsValue = soundDuration / (timerController.duration?.inSeconds ?? soundDuration);
         if (!isSoundPlaying && timerController.value.toStringAsPrecision(1) == threeSecsValue.toString()){
           playSound();
         }
@@ -151,7 +152,7 @@ class _TimerScreenState extends State<TimerScreen>
 
   Future startTimer(int duration) async {
     isSoundPlaying = false;
-    if (duration == 3){
+    if (duration == soundDuration){
       playSound();
     }
     timerController.value = 100;
