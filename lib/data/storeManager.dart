@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/timer.dart';
+import '../models/app_timer.dart';
 
 class StoreManager {
   static late SharedPreferences prefs;
@@ -11,21 +11,21 @@ class StoreManager {
     prefs = await SharedPreferences.getInstance();
   }
 
-  Future write(Timer timer) async {
+  Future write(AppTimer timer) async {
     prefs.setString(timer.id, json.encode(timer.toJson()));
   }
 
-  Timer get(String id) {
-    return Timer.fromJson(json.decode(prefs.getString(id) ?? ''));
+  AppTimer get(String id) {
+    return AppTimer.fromJson(json.decode(prefs.getString(id) ?? ''));
   }
 
-  List<Timer> getList() {
-    List<Timer> timers = [];
+  List<AppTimer> getList() {
+    List<AppTimer> timers = [];
     Set<String> keys = prefs.getKeys();
 
     keys.forEach((key) {
-      Timer session =
-      Timer.fromJson(json.decode(prefs.getString(key) ?? ''));
+      AppTimer session =
+      AppTimer.fromJson(json.decode(prefs.getString(key) ?? ''));
       if (session.id != "") {
         timers.add(session);
       }

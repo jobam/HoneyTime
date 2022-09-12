@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-import '../models/timer.dart';
+import '../models/app_timer.dart' as appTimer;
 import '../shared/menu_bottom.dart';
 
 class TimerScreen extends StatefulWidget {
-  final Timer timer;
+  final appTimer.AppTimer timer;
 
   const TimerScreen({Key? key, required this.timer}) : super(key: key);
 
@@ -16,15 +18,16 @@ class TimerScreen extends StatefulWidget {
 class _TimerScreenState extends State<TimerScreen>
     with TickerProviderStateMixin {
   late AnimationController timerController;
+  final AudioPlayer player = AudioPlayer();
+  late Timer soundTriggerTimer;
 
   final int soundDuration = 3;
   int currentExerciseNb = 1;
   int currentCycleNb = 1;
 
   bool isExercise = true;
-  bool isSoundPlaying = false;
 
-  Timer timer;
+  appTimer.AppTimer timer;
 
   _TimerScreenState(this.timer) {}
 
@@ -35,18 +38,11 @@ class _TimerScreenState extends State<TimerScreen>
         duration: Duration(seconds: timer.exerciseTimeInSec),
         value: 1)
       ..addListener(() {
-        var threeSecsValue = soundDuration /
-            (timerController.duration?.inSeconds ?? soundDuration);
-        if (!isSoundPlaying &&
-            timerController.value.toStringAsPrecision(1) ==
-                threeSecsValue.toString()) {
-          playSound();
-        }
         setState(() {});
       })
-      ..addStatusListener((status) {
+      ..addStatusListener((status) async {
         if (status == AnimationStatus.dismissed) {
-          timerEndHandler();
+          await timerEndHandler();
           setState(() {});
         }
       });
@@ -127,39 +123,36 @@ class _TimerScreenState extends State<TimerScreen>
   }
 
   Future startTimer(int duration) async {
-    isSoundPlaying = false;
-    if (duration == soundDuration) {
-      playSound();
-    }
     timerController.value = 100;
     timerController.duration = Duration(seconds: duration);
     timerController.reverse();
+    soundTriggerTimer =
+        Timer(Duration(seconds: (duration - soundDuration)), playSound);
   }
 
   Future playSound() async {
-    isSoundPlaying = true;
-    AudioPlayer player = AudioPlayer();
-    await player.setSource(AssetSource('audio/count_down.wav'));
+    await player.seek(const Duration(microseconds: 0));
+    await player.play(AssetSource('audio/count_down.wav'));
   }
 
-  void timerEndHandler() {
+  Future timerEndHandler() async {
     if (currentCycleNb <= timer.cycles) {
       if (isExercise && currentExerciseNb < timer.exercisesNb) {
         isExercise = false;
-        startTimer(timer.pauseBetweenExercises);
+        await startTimer(timer.pauseBetweenExercises);
         return;
       }
       if (isExercise && currentExerciseNb >= timer.exercisesNb) {
         isExercise = false;
         if (currentCycleNb < timer.cycles) {
-          startTimer(timer.pauseBetweenCycles);
+          await startTimer(timer.pauseBetweenCycles);
         }
         return;
       }
       if (!isExercise && currentExerciseNb < timer.exercisesNb) {
         isExercise = true;
         currentExerciseNb++;
-        startTimer(timer.exerciseTimeInSec);
+        await startTimer(timer.exerciseTimeInSec);
         return;
       }
       if (!isExercise && currentExerciseNb >= timer.exercisesNb) {
@@ -167,7 +160,7 @@ class _TimerScreenState extends State<TimerScreen>
         if (currentCycleNb <= timer.cycles) {
           isExercise = true;
           currentExerciseNb = 1;
-          startTimer(timer.exerciseTimeInSec);
+          await startTimer(timer.exerciseTimeInSec);
         }
       }
     }

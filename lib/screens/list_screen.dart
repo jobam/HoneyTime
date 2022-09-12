@@ -4,7 +4,7 @@ import 'package:honey_time/screens/timer_screen.dart';
 import 'package:honey_time/shared/menu_bottom.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models/timer.dart';
+import '../models/app_timer.dart';
 
 class ListScreen extends StatefulWidget {
   const ListScreen({Key? key}) : super(key: key);
@@ -20,7 +20,7 @@ class _ListScreenState extends State<ListScreen> {
   TextEditingController txtPauseBetweenexercises = TextEditingController();
   TextEditingController txtPauseBetweenCycles = TextEditingController();
   StoreManager storeManager = StoreManager();
-  List<Timer> timers = [];
+  List<AppTimer> timers = [];
 
   @override
   void initState() {
@@ -124,7 +124,7 @@ class _ListScreenState extends State<ListScreen> {
 
   Future saveTimer() async {
     var uuid = Uuid();
-    Timer newTimer = Timer(
+    AppTimer newTimer = AppTimer(
         uuid.v4(),
         int.tryParse(txtCycles.text) ?? 0,
         int.tryParse(txtexercisesNb.text) ?? 0,
