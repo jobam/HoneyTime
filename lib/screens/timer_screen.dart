@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 
 import '../models/app_timer.dart' as appTimer;
 import '../shared/menu_bottom.dart';
@@ -33,6 +33,9 @@ class _TimerScreenState extends State<TimerScreen>
 
   @override
   void initState() {
+
+    player.setAsset('assets/audio/count_down.flac');
+
     timerController = AnimationController(
         vsync: this,
         duration: Duration(seconds: timer.exerciseTimeInSec),
@@ -132,7 +135,7 @@ class _TimerScreenState extends State<TimerScreen>
 
   Future playSound() async {
     await player.seek(const Duration(microseconds: 0));
-    await player.play(AssetSource('audio/count_down.wav'));
+    await player.play();
   }
 
   Future timerEndHandler() async {
