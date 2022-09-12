@@ -23,6 +23,6 @@ class MyApp extends StatelessWidget {
           '/': (context) => TimerScreen(timer:AppTimer.DEFAULT_TIMER),
           '/list': (context) => ListScreen(),
         },
-        initialRoute: '/list');
+        initialRoute: '/');
   }
 }

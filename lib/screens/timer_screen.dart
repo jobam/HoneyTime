@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../models/app_timer.dart' as appTimer;
 import '../shared/menu_bottom.dart';
@@ -115,6 +116,7 @@ class _TimerScreenState extends State<TimerScreen>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          await Wakelock.enable();
           currentCycleNb = 1;
           currentExerciseNb = 1;
           return await startTimer(timer.exerciseTimeInSec);
