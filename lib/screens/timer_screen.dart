@@ -1,8 +1,5 @@
-import 'dart:typed_data';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../models/timer.dart';
 import '../shared/menu_bottom.dart';
@@ -37,9 +34,12 @@ class _TimerScreenState extends State<TimerScreen>
         vsync: this,
         duration: Duration(seconds: timer.exerciseTimeInSec),
         value: 1)
-      ..addListener(()  {
-        var threeSecsValue = soundDuration / (timerController.duration?.inSeconds ?? soundDuration);
-        if (!isSoundPlaying && timerController.value.toStringAsPrecision(1) == threeSecsValue.toString()){
+      ..addListener(() {
+        var threeSecsValue = soundDuration /
+            (timerController.duration?.inSeconds ?? soundDuration);
+        if (!isSoundPlaying &&
+            timerController.value.toStringAsPrecision(1) ==
+                threeSecsValue.toString()) {
           playSound();
         }
         setState(() {});
@@ -57,9 +57,7 @@ class _TimerScreenState extends State<TimerScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text('Timer'),
+        title: const Text('Timer'),
       ),
       bottomNavigationBar: const MenuBottom(),
       body: Container(
@@ -93,29 +91,7 @@ class _TimerScreenState extends State<TimerScreen>
                       ),
                     ],
                   ),
-                ]
-                    // Padding(
-                    //   padding: const EdgeInsets.all(20.0),
-                    //   child: Center(
-                    //     child: Row(
-                    //       children: [
-                    //         Column(
-                    //           children: [
-                    //             Text('Cycle: ${currentCycleNb}'),
-                    //             Text('Exercice: ${currentExerciseNb}'),
-                    //           ],
-                    //         ),
-                    //         Column(
-                    //           mainAxisAlignment: MainAxisAlignment.center,
-                    //           children: <Widget>[
-                    //
-                    //           ],
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    ),
+                ]),
               ],
             ),
             Row(
@@ -152,7 +128,7 @@ class _TimerScreenState extends State<TimerScreen>
 
   Future startTimer(int duration) async {
     isSoundPlaying = false;
-    if (duration == soundDuration){
+    if (duration == soundDuration) {
       playSound();
     }
     timerController.value = 100;
@@ -164,7 +140,6 @@ class _TimerScreenState extends State<TimerScreen>
     isSoundPlaying = true;
     AudioPlayer player = AudioPlayer();
     await player.setSource(AssetSource('audio/count_down.wav'));
-
   }
 
   void timerEndHandler() {
