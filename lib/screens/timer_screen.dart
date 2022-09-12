@@ -24,6 +24,7 @@ class _TimerScreenState extends State<TimerScreen>
   int currentCycleNb = 1;
 
   bool isExercise = true;
+  bool isSoundPlaying = false;
 
   Timer timer;
 
@@ -34,8 +35,12 @@ class _TimerScreenState extends State<TimerScreen>
     timerController = AnimationController(
         vsync: this,
         duration: Duration(seconds: timer.exerciseTimeInSec),
-        value: 100)
-      ..addListener(() {
+        value: 1)
+      ..addListener(()  {
+        var threeSecsValue = 3 / (timerController.duration?.inSeconds ?? 3);
+        if (!isSoundPlaying && timerController.value.toStringAsPrecision(1) == threeSecsValue.toString()){
+          playSound();
+        }
         setState(() {});
       })
       ..addStatusListener((status) {
@@ -133,7 +138,11 @@ class _TimerScreenState extends State<TimerScreen>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async => await startTimer(timer.exerciseTimeInSec),
+        onPressed: () async {
+          currentCycleNb = 1;
+          currentExerciseNb = 1;
+          return await startTimer(timer.exerciseTimeInSec);
+        },
         tooltip: 'Start',
         child: const Icon(Icons.play_arrow),
       ),
@@ -141,12 +150,20 @@ class _TimerScreenState extends State<TimerScreen>
   }
 
   Future startTimer(int duration) async {
-    AudioPlayer player = AudioPlayer();
-    await player.setSource(AssetSource('audio/count_down.wav'));
-
+    isSoundPlaying = false;
+    if (duration == 3){
+      playSound();
+    }
     timerController.value = 100;
     timerController.duration = Duration(seconds: duration);
     timerController.reverse();
+  }
+
+  Future playSound() async {
+    isSoundPlaying = true;
+    AudioPlayer player = AudioPlayer();
+    await player.setSource(AssetSource('audio/count_down.wav'));
+
   }
 
   void timerEndHandler() {
