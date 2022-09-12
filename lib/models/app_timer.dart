@@ -1,9 +1,9 @@
 class AppTimer {
   static const int CYCLE_DEFAULT = 1;
   static const int exercises_NB_DEFAULT = 1;
-  static const int exercises_TIME_INSEC_DEFAULT = 25;
-  static const int PAUSE_BETWEEN_EXERCISES_DEFAULT = 10;
-  static const int PAUSE_BETWEEN_CYCLES_DEFAULT = 30;
+  static const int exercises_TIME_INSEC_DEFAULT = 120;
+  static const int PAUSE_BETWEEN_EXERCISES_DEFAULT = 0;
+  static const int PAUSE_BETWEEN_CYCLES_DEFAULT = 0;
 
   static AppTimer DEFAULT_TIMER = AppTimer(
       'DEFAULT',
