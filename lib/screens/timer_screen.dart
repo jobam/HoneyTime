@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:wakelock/wakelock.dart';
 
-import '../models/app_timer.dart' as appTimer;
+import '../models/app_timer.dart';
 import '../shared/menu_bottom.dart';
 
 class TimerScreen extends StatefulWidget {
-  final appTimer.AppTimer timer;
+  final AppTimer timer;
 
   const TimerScreen({Key? key, required this.timer}) : super(key: key);
 
@@ -28,13 +28,15 @@ class _TimerScreenState extends State<TimerScreen>
 
   bool isExercise = true;
 
-  appTimer.AppTimer timer;
+  AppTimer timer;
+
+  Color backGroundColor = Colors.white;
+  Color spinnerColor = Colors.blue;
 
   _TimerScreenState(this.timer) {}
 
   @override
   void initState() {
-
     player.setAsset('assets/audio/count_down.flac');
 
     timerController = AnimationController(
@@ -61,6 +63,7 @@ class _TimerScreenState extends State<TimerScreen>
       ),
       bottomNavigationBar: const MenuBottom(),
       body: Container(
+        color: backGroundColor,
         height: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -79,6 +82,7 @@ class _TimerScreenState extends State<TimerScreen>
                             strokeWidth: 15,
                             value: timerController.value,
                             semanticsLabel: 'Circular progress indicator',
+                            color: spinnerColor,
                           )),
                       Container(
                         transform: Matrix4.translationValues(0.0, -138.0, 0.0),
@@ -86,7 +90,7 @@ class _TimerScreenState extends State<TimerScreen>
                           (timerController.value *
                                   (timerController.duration?.inSeconds ?? 0.0))
                               .toStringAsFixed(0),
-                          style: TextStyle(fontSize: 60, color: Colors.blue),
+                          style: TextStyle(fontSize: 60, color: spinnerColor),
                         ),
                       ),
                     ],
@@ -101,11 +105,11 @@ class _TimerScreenState extends State<TimerScreen>
                   children: [
                     Text(
                       'Exercise : ${currentExerciseNb} / ${timer.exercisesNb}',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 20, color: spinnerColor),
                     ),
                     Text(
                       'Cycle : ${currentCycleNb} / ${timer.cycles}',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 20, color: spinnerColor),
                     )
                   ],
                 )
@@ -119,10 +123,12 @@ class _TimerScreenState extends State<TimerScreen>
           await Wakelock.enable();
           currentCycleNb = 1;
           currentExerciseNb = 1;
+          setExerciseColor();
           return await startTimer(timer.exerciseTimeInSec);
         },
         tooltip: 'Start',
-        child: const Icon(Icons.play_arrow),
+        backgroundColor: spinnerColor,
+        child: Icon(Icons.play_arrow, color: backGroundColor),
       ),
     );
   }
@@ -145,12 +151,14 @@ class _TimerScreenState extends State<TimerScreen>
       if (isExercise && currentExerciseNb < timer.exercisesNb) {
         isExercise = false;
         await startTimer(timer.pauseBetweenExercises);
+        setPauseColor();
         return;
       }
       if (isExercise && currentExerciseNb >= timer.exercisesNb) {
         isExercise = false;
         if (currentCycleNb < timer.cycles) {
           await startTimer(timer.pauseBetweenCycles);
+          setPauseColor();
         }
         return;
       }
@@ -158,6 +166,7 @@ class _TimerScreenState extends State<TimerScreen>
         isExercise = true;
         currentExerciseNb++;
         await startTimer(timer.exerciseTimeInSec);
+        setExerciseColor();
         return;
       }
       if (!isExercise && currentExerciseNb >= timer.exercisesNb) {
@@ -166,8 +175,21 @@ class _TimerScreenState extends State<TimerScreen>
           isExercise = true;
           currentExerciseNb = 1;
           await startTimer(timer.exerciseTimeInSec);
+          setExerciseColor();
         }
       }
     }
+  }
+
+  void setExerciseColor() {
+    backGroundColor = Colors.deepOrangeAccent;
+    spinnerColor = Colors.white;
+    setState(() {});
+  }
+
+  void setPauseColor() {
+    backGroundColor = Colors.white;
+    spinnerColor = Colors.blue;
+    setState(() {});
   }
 }
