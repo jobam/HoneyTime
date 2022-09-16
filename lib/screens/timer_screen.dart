@@ -58,9 +58,6 @@ class _TimerScreenState extends State<TimerScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Timer'),
-      ),
       bottomNavigationBar: const MenuBottom(),
       body: Container(
         color: backGroundColor,

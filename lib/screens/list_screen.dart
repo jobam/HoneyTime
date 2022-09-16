@@ -31,11 +31,6 @@ class _ListScreenState extends State<ListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text('Timers'),
-      ),
       bottomNavigationBar: const MenuBottom(),
       body: ListView(
         children: getContent(),
